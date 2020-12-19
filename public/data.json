@@ -1,0 +1,7 @@
+{
+    "videos": [
+        {"id":"vid1", "source":"videos/city.mp4"},
+        {"id":"vid2", "source":"videos/wood-truck.mp4"},
+        {"id":"vid3", "source":"videos/ballons.mp4"}
+    ]
+}
