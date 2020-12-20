@@ -1,21 +1,12 @@
-(function() {
-
-  let videos = null;
-
-  fetch("data.json")
-    .then(response => response.json())
-      .then(data => 
-        {
-          console.log(data.videos); 
-          videos = data.videos;
-        });
+(async function() 
+{
 
   let host = location.origin.replace(/^http/, 'ws');
   let ws = new WebSocket(host);
-  
-  console.log(host);
-
   let videoPlayer = document.getElementById("videoPlayer");
+  let videos = null;
+
+
 
   onVideoPlay = function() 
   {
@@ -35,8 +26,9 @@
     {
       return;
     }
-
+    
     let videoSource = null;
+
     for(let i=0; i<videos.length; i++)
     {
       if(videos[i].id == videoId)
@@ -45,9 +37,45 @@
         break;
       }
     }
+
     videoPlayer.src = videoSource;
-    console.log("update video");
+    console.log(`update video : src=  ${videoSource}`);
   }
+
+  loadJson = async function()
+  {
+    try 
+    {
+      let data = await (await fetch("data.json")).json();
+
+      if(data.videos == null)
+      {
+        console.error("problem with loading the data json file - data.videos");
+      }
+
+      return data.videos;
+    } 
+    catch(e) 
+    {
+      console.error(`problem with loading the data json file ${e.error}`);
+    }
+  }
+
+
+  init = async function()
+  {
+    videos = await loadJson();
+
+    if(videos==null)
+    {
+      console.error("problem with loading the data json file");
+    }
+  }
+
+
+  
+
+  await init();
 
 
   ws.onmessage = function(e) 
